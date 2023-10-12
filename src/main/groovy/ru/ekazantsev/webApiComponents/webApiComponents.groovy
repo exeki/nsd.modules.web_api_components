@@ -187,6 +187,13 @@ abstract class WebApiException extends RuntimeException {
         }
     }
 
+    /** Класс для ошибки используемый когда у пользователя нет прав на операцию */
+    static class NotFound extends WebApiException {
+        NotFound(String message) {
+            super(HttpServletResponse.SC_NOT_FOUND, message)
+        }
+    }
+
 }
 
 /** Прототип ответа сервера */
