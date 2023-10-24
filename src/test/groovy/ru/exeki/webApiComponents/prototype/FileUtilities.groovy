@@ -1,8 +1,6 @@
 package ru.exeki.webApiComponents.prototype
 
-
-import static ru.ekazantsev.nsd_empty_fake_api.EmptyNaumenApiPlaceholder.*
-
+import ru.kazantsev.nsd.modules.web_api_components.ProcessData
 import org.springframework.web.multipart.MultipartFile;
 import ru.naumen.core.server.script.spi.IScriptDtObject;
 import ru.naumen.core.shared.dto.ISDtObject;
@@ -55,7 +53,7 @@ class FileUtilities {
     }
 
     static List<ISDtObject> attachMultipartFilesFromKey(
-            ru.ekazantsev.webApiComponents.ProcessData.MultipartBody processData,
+            ProcessData.MultipartBody processData,
             String formKey,
             ISDtObject dtObject,
             String sourceAttr = null,
@@ -65,7 +63,7 @@ class FileUtilities {
     }
 
     static List<ISDtObject> attachMultipartFilesFromKey(
-            ru.ekazantsev.webApiComponents.ProcessData.MultipartBody processData,
+            ProcessData.MultipartBody processData,
             String formKey,
             String dtObjectUuid,
             String sourceAttr = null,
@@ -80,7 +78,7 @@ class FileUtilities {
     }
 
     static attachFileFromBinaryRequest(
-            ru.ekazantsev.webApiComponents.ProcessData.BinaryBody processData,
+            ProcessData.BinaryBody processData,
             ISDtObject dtObject,
             String contentType,
             String fileName,

@@ -1,8 +1,5 @@
-package ru.ekazantsev.webApiComponents
-
-import ru.naumen.core.server.script.api.injection.InjectApi
-import ru.naumen.core.shared.dto.ISDtObject
-import ru.naumen.core.server.script.spi.IScriptDtObject
+package ru.kazantsev.nsd.modules.web_api_components
+import static ru.kazantsev.nsd.sdk.global_variables.ApiPlaceholder.*
 
 import groovy.transform.Field
 
@@ -11,6 +8,9 @@ import org.springframework.web.multipart.MultipartFile
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import ru.naumen.core.server.script.api.injection.InjectApi
+import ru.naumen.core.server.script.spi.IScriptDtObject
+import ru.naumen.core.shared.dto.ISDtObject
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse

@@ -2,8 +2,9 @@ package ru.exeki.webApiComponents.prototype
 
 import groovy.util.slurpersupport.GPathResult
 import groovy.util.slurpersupport.NodeChildren
+import ru.kazantsev.nsd.modules.web_api_components.ProcessData
 
-class Xml extends ru.ekazantsev.webApiComponents.ProcessData {
+class Xml extends ProcessData {
 
     private XmlSlurper xmlSlurper = new XmlSlurper()
 
