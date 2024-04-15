@@ -1,10 +1,11 @@
 plugins {
     id("groovy")
     id("maven-publish")
+    id("nsd_sdk") version "1.3"
 }
 
-group = "ru.kazantsev.nsd.sdk"
-version = "1.0.0"
+group = "ru.kazantsev.nsd.modules"
+version = "1.0.1"
 
 tasks.javadoc{
     options.encoding = "UTF-8"
@@ -37,12 +38,13 @@ repositories {
     mavenLocal()
 }
 
+sdk {
+    addRepositories()
+    addAppDependencies()
+    addDevDependencies()
+}
+
 dependencies {
-    implementation ("ru.kazantsev.nsd.sdk:upper_level_classes:1.0.0")
-    implementation ("ru.kazantsev.nsd.sdk:global_variables:1.0.0")
     implementation ("org.codehaus.groovy:groovy-all:3.0.19")
-    implementation ("org.springframework:spring-web:5.3.30")
-    implementation ("com.fasterxml.jackson.core:jackson-databind:2.15.2")
-    implementation ("javax.servlet:javax.servlet-api:4.0.1")
 }
 

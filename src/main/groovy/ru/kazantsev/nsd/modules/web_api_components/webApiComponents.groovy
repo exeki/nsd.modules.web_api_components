@@ -319,13 +319,17 @@ abstract class ResponsePrototype {
      */
     static class Json extends ResponsePrototype {
 
-        protected Serializable body
+        protected def body
 
         protected ObjectMapper objectMapper
 
         protected Json() {}
 
         Json(Serializable newBody) {
+            this.body = newBody
+        }
+
+        Json(List<Serializable> newBody) {
             this.body = newBody
         }
 
@@ -349,9 +353,6 @@ abstract class ResponsePrototype {
             byte[] bytes = getObjectMapper().writeValueAsString(this.body).getBytes()
             os.write(bytes, 0, bytes.length)
             os.close()
-//            PrintWriter writer = response.getWriter()
-//            writer.write(getObjectMapper().writeValueAsString(this.body))
-//            writer.close()
         }
 
         @Override
