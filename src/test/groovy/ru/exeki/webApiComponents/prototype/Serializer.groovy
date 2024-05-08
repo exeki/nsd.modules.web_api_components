@@ -1,5 +1,6 @@
+
 package ru.exeki.webApiComponents.prototype
-import static ru.ekazantsev.nsd_empty_fake_api.EmptyNaumenApiPlaceholder.*
+import static ru.kazantsev.nsd.sdk.global_variables.ApiPlaceholder.*
 
 
 import ru.naumen.core.shared.dto.DtObject

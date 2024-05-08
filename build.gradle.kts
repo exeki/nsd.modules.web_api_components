@@ -1,11 +1,11 @@
 plugins {
     id("groovy")
     id("maven-publish")
-    id("nsd_sdk") version "1.3"
+    id("nsd_sdk") version "1.4.1"
 }
 
 group = "ru.kazantsev.nsd.modules"
-version = "1.0.1"
+version = "1.0.2"
 
 tasks.javadoc{
     options.encoding = "UTF-8"
@@ -21,15 +21,17 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            pom {
-                groupId = project.group.toString()
-                artifactId = project.name
-                version = project.version.toString()
-            }
         }
     }
     repositories {
-        mavenLocal()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/exeki/nsd.modules.web_api_components")
+            credentials {
+                username = System.getenv("GITHUB_USERNAME")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
 

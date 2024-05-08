@@ -1,4 +1,5 @@
 package ru.kazantsev.nsd.modules.web_api_components
+
 import static ru.kazantsev.nsd.sdk.global_variables.ApiPlaceholder.*
 
 import groovy.transform.Field
@@ -356,7 +357,7 @@ abstract class ResponsePrototype {
         }
 
         @Override
-        protected void writeHeadersToResponse(HttpServletResponse response){
+        protected void writeHeadersToResponse(HttpServletResponse response) {
             this.addHeader('Content-Type', 'application/json')
             super.writeHeadersToResponse(response)
         }
@@ -663,9 +664,9 @@ abstract class ProcessData {
     static class JsonBody extends ProcessData {
 
         /** Паттерн для парсинга даты */
-        private final static String DEFAULT_PARSER_DATE_FORMAT_PATTERN = "dd.MM.yyyy HH:mm:ss"
+        final static String DEFAULT_PARSER_DATE_FORMAT_PATTERN = "dd.MM.yyyy HH:mm:ss"
         /** Часовой пояс для парсинга даты */
-        private final static String DEFAULT_PARSER_TIME_ZONE_ID = "UTC"
+        final static String DEFAULT_PARSER_TIME_ZONE_ID = "UTC"
 
         private ObjectMapper objectMapper = null
 
@@ -690,10 +691,10 @@ abstract class ProcessData {
         }
 
         def <T> T parseRequestBodyToObject(Class<T> clazz) {
-            return objectMapper.readValue(this.getRequestBody(), clazz)
+            return getObjectMapper().readValue(this.getRequestBody(), clazz)
         }
 
-        HashMap<Map, Object> parseRequestBodyToMap() {
+        HashMap<String, Object> parseRequestBodyToMap() {
             return parseRequestBodyToObject(HashMap)
         }
 

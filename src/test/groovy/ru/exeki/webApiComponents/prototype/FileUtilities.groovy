@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.naumen.core.server.script.spi.IScriptDtObject;
 import ru.naumen.core.shared.dto.ISDtObject;
 
+import static ru.kazantsev.nsd.sdk.global_variables.ApiPlaceholder.*
+
 class FileUtilities {
 
     static ISDtObject attachMultipartFile(
