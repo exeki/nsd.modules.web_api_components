@@ -326,11 +326,7 @@ abstract class ResponsePrototype {
 
         protected Json() {}
 
-        Json(Serializable newBody) {
-            this.body = newBody
-        }
-
-        Json(List<Serializable> newBody) {
+        Json(def newBody) {
             this.body = newBody
         }
 
@@ -351,7 +347,9 @@ abstract class ResponsePrototype {
         @Override
         protected void writeBodyToResponse(HttpServletResponse response) {
             OutputStream os = response.getOutputStream()
-            byte[] bytes = getObjectMapper().writeValueAsString(this.body).getBytes()
+            byte[] bytes
+            if(this.body instanceof String) bytes = this.body.getBytes()
+            else bytes = getObjectMapper().writeValueAsString(this.body).getBytes()
             os.write(bytes, 0, bytes.length)
             os.close()
         }
@@ -420,6 +418,28 @@ abstract class ResponsePrototype {
             Object(Serializable object) {
                 this.body = object
             }
+        }
+    }
+
+    /**
+     * Ответ сервера с json в body
+     */
+    static class String extends ResponsePrototype {
+
+        protected java.lang.String body
+
+        protected String() {}
+
+        String(java.lang.String newBody) {
+            this.body = newBody
+        }
+
+        @Override
+        protected void writeBodyToResponse(HttpServletResponse response) {
+            OutputStream os = response.getOutputStream()
+            byte[] bytes = this.body.getBytes()
+            os.write(bytes, 0, bytes.length)
+            os.close()
         }
     }
 
