@@ -424,13 +424,13 @@ abstract class ResponsePrototype {
     /**
      * Ответ сервера с json в body
      */
-    static class String extends ResponsePrototype {
+    static class StringBody extends ResponsePrototype {
 
-        protected java.lang.String body
+        protected String body
 
-        protected String() {}
+        protected StringBody() {}
 
-        String(java.lang.String newBody) {
+        StringBody(String newBody) {
             this.body = newBody
         }
 
