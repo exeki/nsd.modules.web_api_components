@@ -145,19 +145,30 @@ void exampleGet1(HttpServletRequest request, HttpServletResponse response, ISDtO
 
 Для проверок используются методы:
 
+
+1. Проверка что пользователь имеет определенную группу пользователей
 ```groovy
-//Проверка что пользователь имеет определенную группу пользователей
-Preferences assertUserGroup(List<String> userGroupCodes)
-//Проверка что пользователь лицензирован
-Preferences assertUserIsLicenced(Boolean bool = true)
-//Проверка что общается пользователь из списка (метод принимает объект пользователей и логины)
-Preferences assertUser(List users)
-//Проверка что обращается суперпользователь
-Preferences assertSuperuser(Boolean bool = true)
-//Проверка что при обращении указывается конкретный contentType
-Preferences assertContentType(String contentType)
-//Проверка что обращение происходит по определенному HTTP методы (GET или POST)
-Preferences assertHttpMethod(String method) 
+Preferences.assertUserGroup(List<String> userGroupCodes)
+```
+2. Проверка что пользователь лицензирован
+```groovy
+Preferences.assertUserIsLicenced(Boolean bool = true)
+```
+3. Проверка что общается пользователь из списка (метод принимает объект пользователей и логины)
+```groovy
+Preferences.assertUser(List users)
+```
+4. Проверка что обращается суперпользователь```groovy
+```groovy
+Preferences.assertSuperuser(Boolean bool = true)
+```
+5. Проверка что при обращении указывается конкретный contentType
+```groovy
+Preferences.assertContentType(String contentType)
+```
+6. Проверка что обращение происходит по определенному HTTP методы (GET или POST)
+```groovy
+Preferences.assertHttpMethod(String method) 
 ```
 
 Для конфигурации используются методы:
