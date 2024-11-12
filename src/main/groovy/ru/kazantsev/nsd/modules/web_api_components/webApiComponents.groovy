@@ -24,6 +24,7 @@ import java.time.LocalDateTime
 
 import static ru.kazantsev.nsd.sdk.global_variables.ApiPlaceholder.utils
 
+//noinspection GroovyUnusedAssignment
 @SuppressWarnings("unused")
 @Field String MODULE_NAME = 'webApiComponents'
 
@@ -36,6 +37,19 @@ class Constants {
     static final List<String> DEFAULT_DT_OBJECT_ATTRS = ['title', 'UUID']
     /** Кодировка по умолчанию */
     static final String DEFAULT_CHARSET = 'UTF-8'
+    /** Запись ошибок по умолчанию */
+    static final IExceptionWriter DEFAULT_EXCEPTION_WRITER = {
+        HttpServletResponse response, Throwable e ->
+            try {
+                throw e
+            } catch (WebApiException webApiException) {
+                webApiException.writeToResponseAsJson(response)
+            } catch (Exception exception) {
+                String errorMessage = "Unexpected error"
+                def e500 = new WebApiException.InternalServerError(errorMessage, exception)
+                e500.writeToResponseAsJson(response)
+            }
+    }
 }
 
 /**
@@ -183,6 +197,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить хедер
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> Optional<T> getHeader(String headerName, Class<T> parseAsType) throws WebApiException.BadRequest, WebApiException.InternalServerError {
         String strValue = request.getHeader(headerName)
         if (strValue == null || strValue?.trim()?.isEmpty()) return Optional.empty()
@@ -215,6 +230,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить хедер или хедер не указан
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> T getHeaderElseThrow(String headerName, Class<T> parseAsType) throws WebApiException.BadRequest, WebApiException.InternalServerError {
         return getHeader(headerName, parseAsType).orElseThrow { getNoHeaderException(headerName) }
     }
@@ -239,6 +255,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить хедер
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> Optional<List<T>> getHeaderList(String headerName, Class<T> parseAsType) throws WebApiException.BadRequest, WebApiException.InternalServerError {
         List<String> strValues = request.getHeaders(headerName)?.toList()
         strValues = strValues?.findAll { it != null && !it.trim().isEmpty() }
@@ -275,6 +292,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить хедер или хедер не указан
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> List<T> getHeaderListElseThrow(String headerName, Class<T> parseAsType) throws WebApiException.BadRequest, WebApiException.InternalServerError {
         return getHeaderList(headerName, parseAsType).orElseThrow { getNoHeaderException(headerName) }
     }
@@ -301,6 +319,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить параметр
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> Optional<T> getParam(String paramName, Class<T> parseAsType) throws WebApiException.InternalServerError, WebApiException.BadRequest {
         String strValue = request.getParameter(paramName)
         if (strValue == null || strValue?.trim()?.isEmpty()) return Optional.empty()
@@ -333,6 +352,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить параметр или параметр не указан
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> T getParamElseThrow(String paramName, Class<T> parseAsType) throws WebApiException.InternalServerError, WebApiException.BadRequest {
         return getParam(paramName, parseAsType).orElseThrow { getNoParamException(paramName) }
     }
@@ -357,6 +377,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить параметр
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> Optional<List<T>> getParamList(String paramName, Class<T> parseAsType) throws WebApiException.InternalServerError, WebApiException.BadRequest {
         List<String> strValues = request.getParameterValues(paramName)
         strValues = strValues?.findAll { it != null && !it.trim().isEmpty() }
@@ -393,6 +414,7 @@ class WebApiUtilities {
      * @throws WebApiException.BadRequest если не удалось спарсить параметр или параметр не указан
      */
     //без модификатор public не компилируется в SD
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> List<T> getParamListElseThrow(String paramName, Class<T> parseAsType) throws WebApiException.InternalServerError, WebApiException.BadRequest {
         return getParamList(paramName, parseAsType).orElseThrow { getNoParamException(paramName) }
     }
@@ -484,6 +506,7 @@ class WebApiUtilities {
      * @return текст тела запроса
      * @throws WebApiException.BadRequest если тело запроса отсутствует
      */
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     String getBodyAsStringElseThrow() throws WebApiException.BadRequest {
         return getBodyAsString().orElseThrow({ getNoBodyException() })
     }
@@ -493,6 +516,7 @@ class WebApiUtilities {
      * @param clazz тип объекта, в который нужно десериализовать тело запроса
      * @return десериализованный объект
      */
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> Optional<T> getBodyAsJson(Class<T> clazz = Object) {
         String text = getBodyAsString().orElse(null)
         if (text == null || text?.size() == 0) return Optional.empty()
@@ -505,6 +529,7 @@ class WebApiUtilities {
      * @return десериализованный объект
      * @throws WebApiException.BadRequest если тело запроса отсутствует
      */
+    @SuppressWarnings('GrUnnecessaryPublicModifier')
     public <T> T getBodyAsJsonElseThrow(Class<T> clazz = Object) throws WebApiException.BadRequest {
         return getBodyAsJson(clazz).orElseThrow({ getNoBodyException() })
     }
@@ -576,6 +601,8 @@ class Preferences {
     protected String assertContentType = null
     protected String assertHttpMethod = null
 
+    protected IExceptionWriter exceptionWriter = null
+
     /**
      * Создать новый экземпляр
      * @return новый экземпляр
@@ -600,6 +627,22 @@ class Preferences {
         prefs.assertUser = this.assertUser
         prefs.assertSuperuser = this.assertSuperuser
         return prefs
+    }
+
+    /**
+     * Установить записыватель (ужасно звучит, я знаю) ответа об ошибке.
+     * Принимает на вход объект, реализующий интерфейс IExceptionWriter.
+     * Переданный объект в ходе выполнения метода интерфейса должен полностью обеспечить
+     * запись данных, то есть записать тело ответа, хедеры, статус.
+     * Может принять Closure, но ее сигнатура должна быть идентична методу
+     * IExceptionWriter.whiteToResponse(HttpServletResponse response, Exception e),
+     * то есть принимать на вход те же аргументы
+     * @param exceptionWriter собсна, записыватель
+     * @return текущий ответ
+     */
+    Preferences setExceptionWriter(IExceptionWriter exceptionWriter){
+        this.exceptionWriter = exceptionWriter
+        return this
     }
 
     /**
@@ -813,7 +856,7 @@ class WebApiException extends RuntimeException {
      * Получить данные для записи в боди ответа
      * @return мапа с данными
      */
-    Map<String, Object> getDataForResponse() {
+    Map<String, Object> getDataForJsonResponse() {
         Map<String, Object> body = [
                 'message': message,
                 'status' : status
@@ -832,10 +875,10 @@ class WebApiException extends RuntimeException {
      * Записать данные в ответ
      * @param response ответ
      */
-    void writeToResponse(HttpServletResponse response) {
+    void writeToResponseAsJson(HttpServletResponse response) {
         response.setStatus(getStatus())
         response.addHeader('Content-Type', 'application/json')
-        byte[] bytes = new ObjectMapper().writeValueAsString(getDataForResponse()).getBytes()
+        byte[] bytes = new ObjectMapper().writeValueAsString(getDataForJsonResponse()).getBytes()
         OutputStream os = response.getOutputStream()
         os.write(bytes, 0, bytes.length)
         os.close()
@@ -992,12 +1035,25 @@ class RequestProcessor {
             preProcessAssert()
             WebApiUtilities webApiUtilities = new WebApiUtilities(this)
             action(webApiUtilities)
-        } catch (WebApiException webApiException) {
-            webApiException.writeToResponse(response)
-        } catch (Exception exception) {
-            String errorMessage = "Unexpected error"
-            def e500 = new WebApiException.InternalServerError(errorMessage, exception)
-            e500.writeToResponse(response)
+        } catch (Exception e1) {
+            if (prefs.exceptionWriter != null) {
+                try {
+                    prefs.exceptionWriter.whiteToResponse(response, e1)
+                } catch (MissingMethodException e2) {
+                    String message
+                    if (e2 !instanceof MissingMethodException) message = "Переданный в настройки exceptionWriter не смог записать ошибку при обработке исключения"
+                    else message = "Переданный в настройки exceptionWriter не смог записать ошибку при обработке исключения, тк не реализует интерфейс IExceptionWriter"
+                    new WebApiException.InternalServerError(message, e2).writeToResponseAsJson(response)
+                }
+            } else Constants.DEFAULT_EXCEPTION_WRITER.whiteToResponse(response, e1)
         }
     }
+}
+
+/**
+ * Интерфейс, объект которого реализуют запись данных об ошибке в ответ
+ * Устанавливается в Preferences
+ */
+interface IExceptionWriter {
+    void whiteToResponse(HttpServletResponse response, Exception e)
 }

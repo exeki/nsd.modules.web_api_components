@@ -1,3 +1,5 @@
+//file:noinspection GrMethodMayBeStatic
+//file:noinspection unused
 package ru.kazantsev.nsd.modules.web_api_components
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -272,6 +274,7 @@ void examplePost1(HttpServletRequest request, HttpServletResponse response, ISDt
             ]
             webUtils.setBodyAsJson(responseBody)
             //доступ к базовым параметрам запроса остается, можно выполнять любые операции по своему
+            //noinspection UastIncorrectHttpHeaderInspection
             response.setHeader('message', 'Hello World!')
     }
 }
@@ -280,8 +283,10 @@ void exampleGet1(HttpServletRequest request, HttpServletResponse response, ISDtO
     RequestProcessor.create(request, response, user, new Preferences().setDatePattern("dd.MM.yyyy HH:mm:ss")).process {
         WebApiUtilities webUtils ->
             //В случае отсутствия параметра будет выкинуто исключение с заранее прописанным сообщение
+            //noinspection GroovyUnusedAssignment
             String stringParam1 = webUtils.getParamElseThrow('someParam1')
             //Имеем сами возможность обработать отсутствие параметра, в данном случае выкинем исключение
+            //noinspection GroovyUnusedAssignment
             String stringParam2 = webUtils.getParam('someParam2').orElseThrow { new WebApiException.BadRequest("Ты забыл указать параметр") }
             Boolean dontLikeYou = true
             if (dontLikeYou) {
@@ -318,4 +323,43 @@ String testGet1(HttpServletRequest request, HttpServletResponse response, ISDtOb
                     'getUserPrincipal'        : request.getUserPrincipal()
             ]
     )
+}
+
+void exampleWithCustomExceptionWriter1(HttpServletRequest request, HttpServletResponse response, ISDtObject user) {
+    Preferences prefs = new Preferences().setExceptionWriter { HttpServletResponse resp, Exception exc ->
+        WebApiException webExc = exc instanceof WebApiException ? exc : new WebApiException.InternalServerError("Unexpected error", exc)
+        Map errorData = ['result': null, 'error': webExc.getDataForJsonResponse()]
+        resp.addHeader('Content-Type', 'application/json')
+        resp.setStatus(webExc.getStatus())
+        byte[] bytes = new ObjectMapper().writeValueAsString(errorData).getBytes()
+        OutputStream os = resp.getOutputStream()
+        os.write(bytes, 0, bytes.length)
+        os.close()
+    }
+    RequestProcessor.create(request, response, user, prefs).process {
+        WebApiUtilities webUtils ->
+            throw new RuntimeException("Это исключение будет записано особым образом")
+    }
+}
+
+class CustomExceptionWriter implements IExceptionWriter {
+    @Override
+    void whiteToResponse(HttpServletResponse resp, Exception exc) {
+        WebApiException webExc = exc instanceof WebApiException ? exc : new WebApiException.InternalServerError("Unexpected error", exc)
+        Map errorData = ['result': null, 'error': webExc.getDataForJsonResponse()]
+        resp.addHeader('Content-Type', 'application/json')
+        resp.setStatus(webExc.getStatus())
+        byte[] bytes = new ObjectMapper().writeValueAsString(errorData).getBytes()
+        OutputStream os = resp.getOutputStream()
+        os.write(bytes, 0, bytes.length)
+        os.close()
+    }
+}
+
+void exampleWithCustomExceptionWriter2(HttpServletRequest request, HttpServletResponse response, ISDtObject user) {
+    Preferences prefs = new Preferences().setExceptionWriter(new CustomExceptionWriter())
+    RequestProcessor.create(request, response, user, prefs).process {
+        WebApiUtilities webUtils ->
+            throw new RuntimeException("Это исключение будет записано особым образом")
+    }
 }

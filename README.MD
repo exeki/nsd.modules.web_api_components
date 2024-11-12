@@ -181,6 +181,57 @@ Preferences setObjectMapper(ObjectMapper objectMapper)
 Preferences setDatePattern(String datePattern)
 //Установить код часового пояса
 Preferences setTimeZone(String timeZone)
+//Установить кастомизированный способ записи ошибок. Может принимать на вход closure, 
+//сигнатура которой идентична единственному методу интерфейса IExceptionWriter
+Preferences setExceptionWriter(IExceptionWriter exceptionWriter)
+```
+
+Метод **setExceptionWriter** позволяет вам организовать запись ответа самостоятельно, например:
+
+```groovy
+void exampleWithCustomExceptionWriter1(HttpServletRequest request, HttpServletResponse response, ISDtObject user) {
+    //Устанавливаем в роли обработчика запроса Closure, которая реализует интерфейс IExceptionWriter
+    Preferences prefs = new Preferences().setExceptionWriter { HttpServletResponse resp, Exception exc ->
+        WebApiException webExc = exc instanceof WebApiException ? exc : new WebApiException.InternalServerError("Unexpected error", exc)
+        Map errorData = ['result': null, 'error': webExc.getDataForJsonResponse()]
+        resp.addHeader('Content-Type', 'application/json')
+        resp.setStatus(webExc.getStatus())
+        byte[] bytes = new ObjectMapper().writeValueAsString(errorData).getBytes()
+        OutputStream os = resp.getOutputStream()
+        os.write(bytes, 0, bytes.length)
+        os.close()
+    }
+    RequestProcessor.create(request, response, user, prefs).process {
+        WebApiUtilities webUtils ->
+            throw new RuntimeException("Это исключение будет записано особым образом")
+    }
+}
+```
+
+Аналогичное поведение будет, если создать отдельный класс реализующий интерфейс IExceptionWriter:
+
+```groovy
+class CustomExceptionWriter implements IExceptionWriter {
+    @Override
+    void whiteToResponse(HttpServletResponse resp, Exception exc) {
+        WebApiException webExc = exc instanceof WebApiException ? exc : new WebApiException.InternalServerError("Unexpected error", exc)
+        Map errorData = ['result': null, 'error': webExc.getDataForJsonResponse()]
+        resp.addHeader('Content-Type', 'application/json')
+        resp.setStatus(webExc.getStatus())
+        byte[] bytes = new ObjectMapper().writeValueAsString(errorData).getBytes()
+        OutputStream os = resp.getOutputStream()
+        os.write(bytes, 0, bytes.length)
+        os.close()
+    }
+}
+
+void exampleWithCustomExceptionWriter2(HttpServletRequest request, HttpServletResponse response, ISDtObject user) {
+    Preferences prefs = new Preferences().setExceptionWriter(new CustomExceptionWriter())
+    RequestProcessor.create(request, response, user, prefs).process {
+        WebApiUtilities webUtils ->
+            throw new RuntimeException("Это исключение будет записано особым образом")
+    }
+}
 ```
 
 ### WebApiUtilities - утилитарный класс 

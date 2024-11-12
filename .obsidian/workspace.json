@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "468a26c331384642",
+        "id": "aa66944f0822fe48",
         "type": "tabs",
         "children": [
           {
-            "id": "24b34a6cfafa1779",
+            "id": "7435a6de6b2e2021",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.MD",
-                "mode": "preview",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "README"
+              "title": "New tab"
             }
           }
         ]
@@ -162,8 +158,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "24b34a6cfafa1779",
+  "active": "7435a6de6b2e2021",
   "lastOpenFiles": [
-    "README.MD~"
+    "README.MD",
+    "build/docs/groovydoc/ru/kazantsev/nsd/modules/web_api_components/webApiComponents.html",
+    "build/docs/groovydoc/ru/kazantsev/nsd/modules/web_api_components/exampleModule.html",
+    "build/docs/groovydoc/package-list",
+    "build/docs/groovydoc/ru/kazantsev/nsd/modules/web_api_components/package-summary.html",
+    "build/docs/groovydoc/ru/kazantsev/nsd/modules/web_api_components/package-frame.html",
+    "build/docs/groovydoc/ru/kazantsev/nsd/modules/web_api_components",
+    "build/docs/groovydoc/ru/kazantsev/nsd/modules",
+    "build/docs/groovydoc/ru/kazantsev/nsd",
+    "build/docs/groovydoc/ru/kazantsev",
+    "build/docs/groovydoc/ru",
+    "build/docs/groovydoc/inherit.gif"
   ]
 }
