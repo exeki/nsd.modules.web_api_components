@@ -324,7 +324,7 @@ class WebApiUtilities {
         String strValue = request.getParameter(paramName)
         if (strValue == null || strValue?.trim()?.isEmpty()) return Optional.empty()
         try {
-            return Optional.of(parseValue(strValue, parseAsType))
+            return Optional.ofNullable(parseValue(strValue, parseAsType))
         } catch (NoSuchMethodException e) {
             String message = "В метод parseValue передан тип не имеющий прописанного сценария парсинга и метода valueOf()."
             throw new WebApiException.InternalServerError(message, e)
