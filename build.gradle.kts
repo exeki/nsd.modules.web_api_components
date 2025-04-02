@@ -1,18 +1,17 @@
 plugins {
     id("groovy")
     id("maven-publish")
-    id("nsd_sdk") version "1.4.1"
 }
 
 group = "ru.kazantsev.nsd.modules"
-version = "2.2.1"
+version = "2.2.2"
 
 tasks.javadoc{
     options.encoding = "UTF-8"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_21
     withJavadocJar()
     withSourcesJar()
 }
@@ -37,16 +36,17 @@ publishing {
 
 repositories {
     mavenCentral()
-    mavenLocal()
-}
-
-sdk {
-    addRepositories()
-    addAppDependencies()
-    addDevDependencies()
+    maven {
+        url = uri("https://maven.pkg.github.com/exeki/*")
+        credentials {
+            username = System.getenv("GITHUB_USERNAME")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
     implementation ("org.codehaus.groovy:groovy-all:3.0.19")
+    implementation("ru.kazantsev.nsd.sdk:global_variables:1.1.6")
 }
 
